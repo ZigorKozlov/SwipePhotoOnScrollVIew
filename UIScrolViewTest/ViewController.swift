@@ -20,7 +20,7 @@ import UIKit
 Простого задания значения этого свойства недостаточно, чтобы гарантировать сохранение и восстановление представления. Контроллер представления-владельца и все контроллеры родительского представления этого контроллера представления также должны иметь идентификатор восстановления. Дополнительные сведения о процессе сохранения и восстановления см. В Руководстве по программированию приложений для iOS.
  */
 class ViewController: UIViewController{
-
+    
     var scrolImageView1: SinglePhotoScrolView!
     var scrolImageView2: SinglePhotoScrolView!
     var scrolImageView3: SinglePhotoScrolView!
@@ -29,21 +29,23 @@ class ViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        mainScrolView = UIScrollView(frame: view.bounds)
+        var mainScrollViewFrame = view.bounds
+        mainScrollViewFrame.size.width += 10 // + 10 для расстояния между фото, что бы при Padding'е это усчитывалось
+        mainScrolView = UIScrollView(frame: mainScrollViewFrame)
+                
         view.addSubview(mainScrolView)
+        mainScrolView.showsVerticalScrollIndicator = false
+        mainScrolView.showsHorizontalScrollIndicator = false
         
         scrolImageView1 = SinglePhotoScrolView(frame: view.bounds)
         scrolImageView2 = SinglePhotoScrolView(frame: view.bounds)
         scrolImageView3 = SinglePhotoScrolView(frame: view.bounds)
         
-        var scrollViewRect = view.bounds
         
-        scrollViewRect.origin.x += view.bounds.maxX
-        scrolImageView2.frame = scrollViewRect
-        
-        scrollViewRect.origin.x += view.bounds.maxX
-        scrolImageView3.frame = scrollViewRect
+        let viewWidth = view.bounds.width
+        scrolImageView1.frame.origin = CGPoint(x: 0, y: 0)
+        scrolImageView2.frame.origin = CGPoint(x: viewWidth + 10, y: 0)
+        scrolImageView3.frame.origin = CGPoint(x: viewWidth * 2 + 20, y: 0)
         
         mainScrolView.addSubview(scrolImageView1)
         mainScrolView.addSubview(scrolImageView2)
@@ -53,7 +55,7 @@ class ViewController: UIViewController{
         scrolImageView2.set(image: UIImage(named: "image2.jpg")!)
         scrolImageView3.set(image: UIImage(named: "image3.jpg")!)
         
-        let contentSize = CGSize(width: view.bounds.size.width * 3, height: view.bounds.size.height )
+        let contentSize = CGSize(width: view.bounds.size.width * 3 + 30, height: view.bounds.size.height )// + 30, что бы влез последний фрэйм ScrollView т.к. он + 10
         mainScrolView.contentSize = contentSize
         mainScrolView.isPagingEnabled = true
     }
